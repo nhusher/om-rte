@@ -14,7 +14,7 @@
                                                        </div>
                                                        <div><b>This is in bold</b></div>
                                                        <div><i>And this is italics.</i></div>"))
-                      :update-ch (chan)}))
+                      :cmd-ch (chan)}))
 
 
 
@@ -28,10 +28,11 @@
                   "keydown"   "keypress" "keyup"
                   "mousedown" "mouseup"  "click" ])
 
-(defn rte [args owner]
+(defn rte [{:keys [cmd-ch content] :as args} owner]
   (reify
     om/IInitState
-    (init-state [_] { :data (:content args)
+    (init-state [_] { :data content
+                      :focused false
                       :editor (doto (.createElement js/document "div")
                                     (.setAttribute "contentEditable" true)) })
 
@@ -44,7 +45,15 @@
                      on (fn [n evt cb] (.addEventListener n evt cb))]
 
                  (a/go-loop []
+                            (let [[command arg] (<! cmd-ch)]
+                              ;; TODO: only exec command if the current box is focused
+                              (.execCommand js/document (name command) arg)
+                              (prn command arg)
+                              (recur)))
+
+                 (a/go-loop []
                             (let [edn (map h/as-hiccup (h/parse-fragment (<! update)))]
+                              (om/set-state! owner :focused (= (.-activeElement js/document) editor))
                               (om/set-state! owner :data edn)
                               (om/update! args :content edn)
                               (<! (a/timeout 20))
@@ -62,13 +71,39 @@
 
     om/IRenderState
     (render-state [_ s]
-            (dom/div nil nil))))
+                  (dom/div #js { :className (if (:focused s) "focused" "not-focused")
+                                 :style #js { :padding "1rem" } } nil))))
 
 
 (defn vis [data owner]
   (reify
     om/IRender
-    (render [_] (dom/div #js { :style #js { :font-family "consolas" } } (pr-str (:content data))))))
+    (render [_] (dom/div #js { :style #js { :font-family "consolas"
+                                            :border-top "1px dotted #ccc"
+                                            :padding "1rem" } } (pr-str (:content data))))))
 
-(om/root rte app-state {:target (. js/document (getElementById "app"))})
-(om/root vis app-state {:target (. js/document (getElementById "vis"))})
+(defn rte-ui [{:keys [cmd-ch] :as data} owner]
+  (reify
+    om/IRender
+    (render [_]
+            (dom/div #js { :className "rte-ui" }
+                     (dom/div nil
+                              (dom/button #js { :type "button"
+                                                :className "pure-button pure-button-primary"
+                                                :onClick (fn [_] (put! cmd-ch [:subscript])) } "Sub")
+                              " "
+                              (dom/button #js { :type "button"
+                                                :className "pure-button pure-button-primary"
+                                                :onClick (fn [_] (put! cmd-ch [:superscript])) } "Sup")
+                              " "
+                              (dom/button #js { :type "button"
+                                                :className "pure-button"
+                                                :onClick (fn [_] (put! cmd-ch [:removeFormat])) } "Strip Format"))
+                     (om/build rte data)
+                     (om/build vis data)))))
+
+
+(om/root rte-ui app-state {:target (. js/document (getElementById "app"))})
+
+
+(put! (:cmd-ch @app-state) [:subscript nil])

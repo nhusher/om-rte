@@ -8,7 +8,12 @@
 
 (enable-console-print!)
 
-(def app-state (atom {:content (map h/as-hiccup (h/parse-fragment "<div><a href='http://www.google.com'>hello</a></div>"))
+(def app-state (atom {:content (map h/as-hiccup
+                                    (h/parse-fragment "<div>
+                                                        <a href='http://www.google.com'>hello</a>
+                                                       </div>
+                                                       <div><b>This is in bold</b></div>
+                                                       <div><i>And this is italics.</i></div>"))
                       :update-ch (chan)}))
 
 
@@ -40,7 +45,6 @@
 
                  (a/go-loop []
                             (let [edn (map h/as-hiccup (h/parse-fragment (<! update)))]
-                              (prn html)
                               (om/set-state! owner :data edn)
                               (om/update! args :content edn)
                               (<! (a/timeout 20))
@@ -55,9 +59,6 @@
     (will-unmount [_]
                   (let [editor (om/get-state owner :editor)]
                     (-> editor .parentNode .removeChild editor)))
-
-;;     om/IShouldUpdate ;; Updating a contentEditable node is dangerous business.
-;;     (should-update [_ next-props next-state] false)
 
     om/IRenderState
     (render-state [_ s]

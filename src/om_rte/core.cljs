@@ -8,19 +8,19 @@
 
 (enable-console-print!)
 
-(def app-state (atom {:content (map h/as-hiccup
-                                    (h/parse-fragment "<div>
-                                                        <a href='http://www.google.com'>hello</a>
-                                                       </div>
-                                                       <div><b>This is in bold</b></div>
-                                                       <div><i>And this is italics.</i></div>"))
-                      :cmd-ch (chan)}))
-
-
+(def text "<div><a href='http://www.google.com'>hello</a></div>
+           <div><b>This is in bold</b></div>
+           <div><i>And this is italics.</i></div>")
 
 (defn- log [ & args]
   (.apply (.-log js/console) js/console (clj->js args))
   nil)
+
+
+
+
+(def app-state (atom {:content (map h/as-hiccup (h/parse-fragment text))
+                      :cmd-ch (chan)}))
 
 (def dom-events [ "cut"       "paste"
                   "click"     "dblclick"
@@ -28,59 +28,67 @@
                   "keydown"   "keypress" "keyup"
                   "mousedown" "mouseup"  "click" ])
 
-(defn rte [{:keys [cmd-ch content] :as args} owner]
+(defn- make-editor-node [css-prefix events evt-callback content]
+  (let [n (.createElement js/document "div")]
+    (doseq [e events] (.addEventListener n e evt-callback))
+    (.setAttribute n "class" (str css-prefix "-editor"))
+    (.setAttribute n "contentEditable" true)
+    (set! (.-innerHTML n) (hr/hiccup-to-html content))
+    n))
+
+(defn rte-field [{:keys [cmd-ch content css-prefix throttle]
+                  :or   { content '()
+                          css-prefix "om-rte"
+                          throttle 20 }
+                  :as   args }
+                 owner]
   (reify
     om/IInitState
-    (init-state [_] { :data content
-                      :focused false
-                      :editor (doto (.createElement js/document "div")
-                                    (.setAttribute "contentEditable" true)) })
+    (init-state [_]
+                { :focused   false })
 
     om/IDidMount
     (did-mount [_]
-               (let [update (chan (a/sliding-buffer 1))
-                     data   (om/get-state owner :data)
-                     editor (om/get-state owner :editor)
-                     parent (om/get-node owner)
-                     on (fn [n evt cb] (.addEventListener n evt cb))]
+               (let [update-ch (chan (a/sliding-buffer 1))
+                     update-fn (fn [& args] (this-as el (put! update-ch (.-innerHTML el))))
+                     editor (make-editor-node css-prefix dom-events update-fn (hr/hiccup-to-html content))
+                     parent (om/get-node owner)]
 
+                 (if (nil? cmd-ch) (throw js/Error "Command channel disconnected!"))
                  (a/go-loop []
                             (let [[command arg] (<! cmd-ch)]
                               ;; TODO: only exec command if the current box is focused
+                              ;; This means that it should only exec the command if the
+                              ;; current selection marque is in the current box
+                              ;; TODO: translate hyphenated command to real html command
                               (.execCommand js/document (name command) arg)
-                              (prn command arg)
                               (recur)))
 
                  (a/go-loop []
-                            (let [edn (map h/as-hiccup (h/parse-fragment (<! update)))]
+                            (let [edn (map h/as-hiccup (h/parse-fragment (<! update-ch)))]
                               (om/set-state! owner :focused (= (.-activeElement js/document) editor))
-                              (om/set-state! owner :data edn)
                               (om/update! args :content edn)
-                              (<! (a/timeout 20))
+                              (<! (a/timeout throttle))
                               (recur)))
 
-                 (set! (.-innerHTML editor) (hr/hiccup-to-html data))
-                 (.appendChild parent editor)
-                 (doseq [evt dom-events]
-                   (on editor evt (fn [_] (put! update (.-innerHTML editor)))))))
+                 (om/set-state! owner :edit-node editor)
+                 (.appendChild parent editor)))
 
     om/IWillUnmount
     (will-unmount [_]
-                  (let [editor (om/get-state owner :editor)]
+                  (let [editor (om/get-state owner :edit-node)]
                     (-> editor .parentNode .removeChild editor)))
 
     om/IRenderState
     (render-state [_ s]
-                  (dom/div #js { :className (if (:focused s) "focused" "not-focused")
-                                 :style #js { :padding "1rem" } } nil))))
+                  (dom/div #js { :className (str (if (:focused s) "focused " "not-focused ")
+                                                 (str css-prefix "-container")) } nil))))
 
 
-(defn vis [data owner]
+(defn rte-vis [data owner]
   (reify
     om/IRender
-    (render [_] (dom/div #js { :style #js { :font-family "consolas"
-                                            :border-top "1px dotted #ccc"
-                                            :padding "1rem" } } (pr-str (:content data))))))
+    (render [_] (dom/div #js { :className "om-rte-visualizer" } (pr-str (:content data))))))
 
 (defn rte-ui [{:keys [cmd-ch] :as data} owner]
   (reify
@@ -99,11 +107,9 @@
                               (dom/button #js { :type "button"
                                                 :className "pure-button"
                                                 :onClick (fn [_] (put! cmd-ch [:removeFormat])) } "Strip Format"))
-                     (om/build rte data)
-                     (om/build vis data)))))
+                     (om/build rte-field data)
+                     (om/build rte-vis data)))))
 
 
 (om/root rte-ui app-state {:target (. js/document (getElementById "app"))})
 
-
-(put! (:cmd-ch @app-state) [:subscript nil])

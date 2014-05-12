@@ -39,7 +39,7 @@
                  owner]
   (reify
     om/IInitState
-    (init-state [_] { :focused   false })
+    (init-state [_] { :focused false })
 
     om/IDidMount
     (did-mount [_]
@@ -53,7 +53,7 @@
                                             (hr/hiccup-to-html content))]
 
                  (if (nil? cmd-ch)
-                   (throw js/Error "Command channel disconnected!"))
+                   (throw (js/Error "Command channel disconnected!")))
 
                  (a/go-loop []
                             (let [[command arg] (<! cmd-ch)]
@@ -105,12 +105,9 @@
     (init-state [_] { })
 
     om/IRenderState
-    (render-state [_ { :keys [cmd-ch] }]
+    (render-state [_ _]
             (dom/div #js { :className css-class }
-                     (om/build rte-field { :content    content
-                                           :css-prefix (str css-class "-")
-                                           :cmd-ch     cmd-ch
-                                           :throttle   throtte })
+                     (om/build rte-field data)
                      (om/build rte-vis data)))))
 
 

@@ -12,8 +12,6 @@
            <div><b>This is in bold</b></div>
            <div><i>And this is italics.</i></div>")
 
-(def mych (chan))
-
 (def app-state (atom {:content (map h/as-hiccup (h/parse-fragment text)) }))
 
 (def dom-events [ "cut"       "paste"
@@ -126,7 +124,6 @@
                         controls)))))
 
 
-
 (defn rte-ui
   ([data owner] (rte-ui data owner nil))
   ([data owner {:as   opts
@@ -147,13 +144,12 @@
 
                       (om/build rte-field data
                                 {:opts { :cmd-ch     cmd-ch
-                                          :css-prefix css-prefix
-                                          :throttle   throttle }})
+                                         :css-prefix css-prefix
+                                         :throttle   throttle }})
 
                       (om/build rte-vis data))))))
 
 
-
 (om/root rte-ui app-state {:target (. js/document (getElementById "app"))
-                           :opts { :cmd-ch mych }})
+                           :opts { :cmd-ch (chan) }})
 

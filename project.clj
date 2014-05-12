@@ -1,6 +1,6 @@
 (defproject om-rte "0.1.0-SNAPSHOT"
-  :description "FIXME: write this!"
-  :url "http://example.com/FIXME"
+  :description "A rich text editor written for Om"
+  :url "http://github.com/nhusher/om-rte"
 
   :dependencies [[org.clojure/clojure "1.5.1"]
                  [org.clojure/clojurescript "0.0-2173"]
@@ -19,4 +19,4 @@
                 :output-to "om_rte.js"
                 :output-dir "out"
                 :optimizations :none
-                :source-map true}}]})
+                :source-map true }}]})

@@ -7,14 +7,25 @@ body {
 .om-rte-visualizer {
   font-family: "Consolas", fixed-width;
   padding: 1rem;
+  border-top: 1px dotted #aaa;
+}
+
+.om-rte-controls button {
+  border-radius: 0;
+}
+.om-rte-controls button:first-child {
+  border-radius: 2px 0 0 2px;
+}
+.om-rte-controls button:last-child {
+  border-radius: 0 2px 2px 0;
 }
 
 .om-rte-editor {
   padding: 1rem;
   line-height: 1.5;
-  border-width: 1px;
-  border-style: solid;
-  border-color: #bbb #eee #eee;
-
   margin: 1rem 0;
+}
+
+.om-rte-editor:focus {
+  outline: none;
 }

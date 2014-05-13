@@ -149,7 +149,11 @@
 
                       (om/build rte-vis data))))))
 
+(. js/document
+   (addEventListener "DOMContentLoaded"
+                     (fn [_] (om/root rte-ui
+                                      app-state
+                                      {:target (. js/document (getElementById "app"))
+                                       :opts { :cmd-ch mych }}))))
 
-(om/root rte-ui app-state {:target (. js/document (getElementById "app"))
-                           :opts { :cmd-ch (chan) }})
 

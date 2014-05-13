@@ -12,19 +12,16 @@
                    { :icon "fa-quote-left" :label "Quote"     :action #(put! % ["formatblock" "blockquote"]) }
                    { :icon "fa-link"       :label "Link"      :action #(prn %)                               }])
 
-(defn rte-controls [data owner {:as   opts
-                                :keys [ cmd-ch
-                                        css-prefix
-                                        controls ]
-
-                                :or   { css-prefix "om-rte"
-                                        controls   def-controls }}]
+(defn rte-controls [data owner]
   (reify
     om/IDisplayName
     (display-name [_] "rte-controls")
 
-    om/IRender
-    (render [_]
+    om/IInitState
+    (init-state [_] { :controls def-controls })
+
+    om/IRenderState
+    (render-state [_ {:keys [css-prefix cmd-ch controls]}]
             (apply dom/div #js { :className (str css-prefix "-controls") }
                    (map (fn [{:keys [icon label action]}]
                           (dom/button #js { :className "pure-button"

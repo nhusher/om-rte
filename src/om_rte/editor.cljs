@@ -13,10 +13,8 @@
                   "keydown"   "keypress" "keyup"
                   "mousedown" "mouseup"  "click" ])
 
-
-(defn- make-editor [css-prefix events evt-callback content]
+(defn- make-editor [css-prefix content]
   (let [n (.createElement js/document "div")]
-    (doseq [e events] (.addEventListener n e evt-callback))
     (.setAttribute n "class" (str css-prefix "-editor"))
     (.setAttribute n "contentEditable" true)
     (set! (.-innerHTML n) (hr/hiccup-to-html content))
@@ -27,28 +25,26 @@
         sel (js/getSelection)
         b   (.-body js/document)]
 
-    (loop [p (.-extentNode sel)]
+    (loop [p (.-anchorNode sel)]
       (if (= n p)
         true
         (if (or (= b p) (nil? p))
           false
           (recur (.-parentNode p)))))))
 
-(defn rte-editor [data owner {:as opts
-                             :keys [ cmd-ch throttle css-prefix ]
-                             :or   { throttle 20
-                                     css-prefix "om-rte" }}]
+(defn rte-editor [data owner]
   (reify
     om/IDisplayName
     (display-name [_] "rte-editor")
 
+    om/IInitState
+    (init-state [_] { })
+
     om/IDidMount
     (did-mount [_]
-               (let [parent (om/get-node owner)
-                     upd-ch (chan (a/sliding-buffer 1))
-                     upd-fn (fn [n] (put! upd-ch (.-innerHTML n)))
-                     editor (make-editor css-prefix dom-events
-                                         (fn [_] (this-as el (upd-fn el)))
+               (let [{:keys [throttle cmd-ch css-prefix]} (om/get-state owner)
+                     parent (om/get-node owner)
+                     editor (make-editor css-prefix
                                          (hr/hiccup-to-html (:content data)))]
 
                  (if (nil? cmd-ch)
@@ -64,7 +60,7 @@
 
                  (a/go
                   (loop []
-                    (let [edn (map h/as-hiccup (h/parse-fragment (<! upd-ch)))]
+                    (let [edn (map h/as-hiccup (h/parse-fragment (.-innerHTML editor)))]
                       (om/update! data :content edn)
                       (<! (a/timeout throttle))
                       (recur))))
@@ -77,6 +73,6 @@
                   (let [editor (om/get-state owner :edit-node)]
                     (-> editor .parentNode .removeChild editor)))
 
-    om/IRender
-    (render [_]
+    om/IRenderState
+    (render-state [_ {:keys [css-prefix]}]
             (dom/div #js { :className (str css-prefix "-container") } nil))))

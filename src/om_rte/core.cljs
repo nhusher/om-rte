@@ -19,29 +19,26 @@
 
 (defn rte
   ([data owner] (rte data owner nil))
-  ([data owner {:as   opts
-                :keys [ cmd-ch
-                        css-prefix
-                        throttle ]
-
-                :or   { cmd-ch     (chan)
-                        css-prefix "om-rte"
-                        throttle   20 }}]
+  ([data owner opts]
    (reify
+     om/IInitState
+     (init-state [_] { :cmd-ch      (chan)
+                       :css-prefix  "om-rte"
+                       :throttle    20 })
      om/IDisplayName
      (display-name [_] "rte")
 
-     om/IRender
-     (render [_]
+     om/IRenderState
+     (render-state [_ { :keys [css-prefix cmd-ch throttle]}]
              (dom/div #js { :className css-prefix }
                       (om/build rte-controls data
-                                {:opts { :cmd-ch     cmd-ch
-                                         :css-prefix css-prefix }})
+                                {:state { :cmd-ch     cmd-ch
+                                          :css-prefix css-prefix }})
 
                       (om/build rte-editor data
-                                {:opts { :cmd-ch     cmd-ch
-                                         :css-prefix css-prefix
-                                         :throttle   throttle }})
+                                {:state { :cmd-ch     cmd-ch
+                                          :css-prefix css-prefix
+                                          :throttle   throttle }})
 
                       (om/build rte-visualizer data))))))
 
@@ -52,6 +49,5 @@
    (addEventListener "DOMContentLoaded"
                      (fn [_] (om/root rte
                                       app-state
-                                      {:target (. js/document (getElementById "app"))
-                                       :opts { :cmd-ch (chan) }}))))
+                                      {:target (. js/document (getElementById "app"))}))))
 

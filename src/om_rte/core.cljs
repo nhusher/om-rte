@@ -41,13 +41,14 @@
           false
           (recur (.-parentNode p)))))))
 
-
-
 (defn rte-field [data owner {:as opts
                              :keys [ cmd-ch throttle css-prefix ]
                              :or   { throttle 20
                                      css-prefix "om-rte" }}]
   (reify
+    om/IDisplayName
+    (display-name [_] "rte-field")
+
     om/IDidMount
     (did-mount [_]
                (let [parent (om/get-node owner)
@@ -87,22 +88,19 @@
     (render [_]
             (dom/div #js { :className (str css-prefix "-container") } nil))))
 
-
 (defn rte-vis [data owner]
   (reify
+    om/IDisplayName
+    (display-name [_] "rte-visualizer")
+
     om/IRender
     (render [_] (dom/div #js { :className "om-rte-visualizer" } (pr-str (:content data))))))
-
-
-
-
 
 (def def-controls [{ :icon "fa-bold"       :label "Bold"      :action #(put! % ["bold"])                     }
                    { :icon "fa-italic"     :label "Italic"    :action #(put! % ["italic"])                   }
                    { :icon "fa-underline"  :label "Underline" :action #(put! % ["underline"])                }
-                   { :icon "fa-quote-left" :label "Quote"     :action #(put! % ["formatblock" "blockquote"]) }])
-
-
+                   { :icon "fa-quote-left" :label "Quote"     :action #(put! % ["formatblock" "blockquote"]) }
+                   { :icon "fa-link"       :label "Link"      :action #(prn %)                               }])
 
 (defn rte-controls [data owner {:as   opts
                                 :keys [ cmd-ch
@@ -112,6 +110,9 @@
                                 :or   { css-prefix "om-rte"
                                         controls   def-controls }}]
   (reify
+    om/IDisplayName
+    (display-name [_] "rte-controls")
+
     om/IRender
     (render [_]
             (apply dom/div #js { :className (str css-prefix "-controls") }
@@ -122,7 +123,6 @@
                                       (dom/i #js { :className (str "fa " icon) })))
 
                         controls)))))
-
 
 (defn rte-ui
   ([data owner] (rte-ui data owner nil))
@@ -135,6 +135,9 @@
                         css-prefix "om-rte"
                         throttle   20 }}]
    (reify
+     om/IDisplayName
+     (display-name [_] "rte-ui")
+
      om/IRender
      (render [_]
              (dom/div #js { :className css-prefix }
@@ -155,5 +158,4 @@
                                       app-state
                                       {:target (. js/document (getElementById "app"))
                                        :opts { :cmd-ch (chan) }}))))
-
 

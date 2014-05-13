@@ -67,7 +67,7 @@ hickory.hiccup_utils.tag_well_formed_QMARK_ = (function tag_well_formed_QMARK_(t
 {if((dot_idx === -1))
 {return true;
 } else
-{var classes = tag_elem__$1.substring((dot_idx + 1));return cljs.core.every_QMARK_.call(null,(function (p1__9385_SHARP_){return (0 < cljs.core.count.call(null,p1__9385_SHARP_));
+{var classes = tag_elem__$1.substring((dot_idx + 1));return cljs.core.every_QMARK_.call(null,(function (p1__9513_SHARP_){return (0 < cljs.core.count.call(null,p1__9513_SHARP_));
 }),hickory.hiccup_utils.split_keep_trailing_empty.call(null,classes,/\./));
 }
 } else
@@ -105,18 +105,18 @@ if((curr_dot === -1))
 } else
 {var next_dot = hickory.hiccup_utils.index_of.call(null,tag_elem__$1,".",(curr_dot + 1));var next_hash = hickory.hiccup_utils.index_of.call(null,tag_elem__$1,"#",(curr_dot + 1));var cutoff = hickory.hiccup_utils.first_idx.call(null,next_dot,next_hash);if((cutoff === -1))
 {{
-var G__9386 = next_dot;
-var G__9387 = cljs.core.conj_BANG_.call(null,classes,tag_elem__$1.substring((curr_dot + 1)));
-curr_dot = G__9386;
-classes = G__9387;
+var G__9514 = next_dot;
+var G__9515 = cljs.core.conj_BANG_.call(null,classes,tag_elem__$1.substring((curr_dot + 1)));
+curr_dot = G__9514;
+classes = G__9515;
 continue;
 }
 } else
 {{
-var G__9388 = next_dot;
-var G__9389 = cljs.core.conj_BANG_.call(null,classes,tag_elem__$1.substring((curr_dot + 1),cutoff));
-curr_dot = G__9388;
-classes = G__9389;
+var G__9516 = next_dot;
+var G__9517 = cljs.core.conj_BANG_.call(null,classes,tag_elem__$1.substring((curr_dot + 1),cutoff));
+curr_dot = G__9516;
+classes = G__9517;
 continue;
 }
 }
@@ -154,32 +154,32 @@ if((remaining_content == null))
 } else
 {if(cljs.core.seq_QMARK_.call(null,cljs.core.first.call(null,remaining_content)))
 {{
-var G__9390 = cljs.core.next.call(null,remaining_content);
-var G__9391 = (function (){var remaining_seq = cljs.core.first.call(null,remaining_content);var result__$1 = result;while(true){
+var G__9518 = cljs.core.next.call(null,remaining_content);
+var G__9519 = (function (){var remaining_seq = cljs.core.first.call(null,remaining_content);var result__$1 = result;while(true){
 if((remaining_seq == null))
 {return result__$1;
 } else
 {{
-var G__9392 = cljs.core.next.call(null,remaining_seq);
-var G__9393 = cljs.core.conj_BANG_.call(null,result__$1,cljs.core.first.call(null,remaining_seq));
-remaining_seq = G__9392;
-result__$1 = G__9393;
+var G__9520 = cljs.core.next.call(null,remaining_seq);
+var G__9521 = cljs.core.conj_BANG_.call(null,result__$1,cljs.core.first.call(null,remaining_seq));
+remaining_seq = G__9520;
+result__$1 = G__9521;
 continue;
 }
 }
 break;
 }
 })();
-remaining_content = G__9390;
-result = G__9391;
+remaining_content = G__9518;
+result = G__9519;
 continue;
 }
 } else
 {{
-var G__9394 = cljs.core.next.call(null,remaining_content);
-var G__9395 = cljs.core.conj_BANG_.call(null,result,cljs.core.first.call(null,remaining_content));
-remaining_content = G__9394;
-result = G__9395;
+var G__9522 = cljs.core.next.call(null,remaining_content);
+var G__9523 = cljs.core.conj_BANG_.call(null,result,cljs.core.first.call(null,remaining_content));
+remaining_content = G__9522;
+result = G__9523;
 continue;
 }
 }
@@ -194,11 +194,11 @@ break;
 * attribute map in the second element, and then any children. Note that this
 * does not happen recursively; content is not modified.
 */
-hickory.hiccup_utils.normalize_element = (function normalize_element(hiccup_form){var vec__9398 = hiccup_form;var tag_elem = cljs.core.nth.call(null,vec__9398,0,null);var content = cljs.core.nthnext.call(null,vec__9398,1);if(!(hickory.hiccup_utils.tag_well_formed_QMARK_.call(null,tag_elem)))
+hickory.hiccup_utils.normalize_element = (function normalize_element(hiccup_form){var vec__9526 = hiccup_form;var tag_elem = cljs.core.nth.call(null,vec__9526,0,null);var content = cljs.core.nthnext.call(null,vec__9526,1);if(!(hickory.hiccup_utils.tag_well_formed_QMARK_.call(null,tag_elem)))
 {throw cljs.core.ex_info.call(null,[cljs.core.str("Invalid input: Tag element"),cljs.core.str(tag_elem),cljs.core.str("is not well-formed.")].join(''),cljs.core.PersistentArrayMap.EMPTY);
 } else
 {}
-var tag_name = cljs.core.keyword.call(null,clojure.string.lower_case.call(null,hickory.hiccup_utils.tag_name.call(null,tag_elem)));var tag_classes = hickory.hiccup_utils.class_names.call(null,tag_elem);var tag_id = hickory.hiccup_utils.id.call(null,tag_elem);var tag_attrs = new cljs.core.PersistentArrayMap(null, 2, [new cljs.core.Keyword(null,"id","id",1013907597),tag_id,new cljs.core.Keyword(null,"class","class",1108647146),((!(cljs.core.empty_QMARK_.call(null,tag_classes)))?clojure.string.join.call(null," ",tag_classes):null)], null);var vec__9399 = ((cljs.core.map_QMARK_.call(null,cljs.core.first.call(null,content)))?new cljs.core.PersistentVector(null, 2, 5, cljs.core.PersistentVector.EMPTY_NODE, [cljs.core.first.call(null,content),cljs.core.rest.call(null,content)], null):new cljs.core.PersistentVector(null, 2, 5, cljs.core.PersistentVector.EMPTY_NODE, [null,content], null));var map_attrs = cljs.core.nth.call(null,vec__9399,0,null);var content__$1 = cljs.core.nth.call(null,vec__9399,1,null);var attrs = cljs.core.merge.call(null,tag_attrs,map_attrs);return cljs.core.apply.call(null,cljs.core.vector,tag_name,attrs,content__$1);
+var tag_name = cljs.core.keyword.call(null,clojure.string.lower_case.call(null,hickory.hiccup_utils.tag_name.call(null,tag_elem)));var tag_classes = hickory.hiccup_utils.class_names.call(null,tag_elem);var tag_id = hickory.hiccup_utils.id.call(null,tag_elem);var tag_attrs = new cljs.core.PersistentArrayMap(null, 2, [new cljs.core.Keyword(null,"id","id",1013907597),tag_id,new cljs.core.Keyword(null,"class","class",1108647146),((!(cljs.core.empty_QMARK_.call(null,tag_classes)))?clojure.string.join.call(null," ",tag_classes):null)], null);var vec__9527 = ((cljs.core.map_QMARK_.call(null,cljs.core.first.call(null,content)))?new cljs.core.PersistentVector(null, 2, 5, cljs.core.PersistentVector.EMPTY_NODE, [cljs.core.first.call(null,content),cljs.core.rest.call(null,content)], null):new cljs.core.PersistentVector(null, 2, 5, cljs.core.PersistentVector.EMPTY_NODE, [null,content], null));var map_attrs = cljs.core.nth.call(null,vec__9527,0,null);var content__$1 = cljs.core.nth.call(null,vec__9527,1,null);var attrs = cljs.core.merge.call(null,tag_attrs,map_attrs);return cljs.core.apply.call(null,cljs.core.vector,tag_name,attrs,content__$1);
 });
 /**
 * Given a well-formed hiccup form, recursively normalizes it, so that it and
@@ -213,10 +213,10 @@ var tag_name = cljs.core.keyword.call(null,clojure.string.lower_case.call(null,h
 hickory.hiccup_utils.normalize_form = (function normalize_form(form){if(typeof form === 'string')
 {return form;
 } else
-{var vec__9402 = hickory.hiccup_utils.normalize_element.call(null,form);var tag = cljs.core.nth.call(null,vec__9402,0,null);var attrs = cljs.core.nth.call(null,vec__9402,1,null);var contents = cljs.core.nthnext.call(null,vec__9402,2);return cljs.core.apply.call(null,cljs.core.vector,tag,attrs,cljs.core.map.call(null,(function (p1__9400_SHARP_){if(cljs.core.vector_QMARK_.call(null,p1__9400_SHARP_))
-{return normalize_form.call(null,p1__9400_SHARP_);
+{var vec__9530 = hickory.hiccup_utils.normalize_element.call(null,form);var tag = cljs.core.nth.call(null,vec__9530,0,null);var attrs = cljs.core.nth.call(null,vec__9530,1,null);var contents = cljs.core.nthnext.call(null,vec__9530,2);return cljs.core.apply.call(null,cljs.core.vector,tag,attrs,cljs.core.map.call(null,(function (p1__9528_SHARP_){if(cljs.core.vector_QMARK_.call(null,p1__9528_SHARP_))
+{return normalize_form.call(null,p1__9528_SHARP_);
 } else
-{return p1__9400_SHARP_;
+{return p1__9528_SHARP_;
 }
 }),hickory.hiccup_utils.expand_content_seqs.call(null,contents)));
 }

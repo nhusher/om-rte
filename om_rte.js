@@ -7,7 +7,7 @@ goog.addDependency("../hickory/render.js", ['hickory.render'], ['cljs.core', 'hi
 goog.addDependency("../clojure/zip.js", ['clojure.zip'], ['cljs.core']);
 goog.addDependency("../hickory/core.js", ['hickory.core'], ['cljs.core', 'goog.string', 'clojure.zip', 'hickory.utils']);
 goog.addDependency("../om/dom.js", ['om.dom'], ['cljs.core']);
-goog.addDependency("../om/core.js", ['om.core'], ['cljs.core', 'om.dom']);
+goog.addDependency("../om/core.js", ['om.core'], ['cljs.core', 'om.dom', 'goog.ui.IdGenerator']);
 goog.addDependency("../cljs/core/async/impl/protocols.js", ['cljs.core.async.impl.protocols'], ['cljs.core']);
 goog.addDependency("../cljs/core/async/impl/ioc_helpers.js", ['cljs.core.async.impl.ioc_helpers'], ['cljs.core', 'cljs.core.async.impl.protocols']);
 goog.addDependency("../cljs/core/async/impl/buffers.js", ['cljs.core.async.impl.buffers'], ['cljs.core', 'cljs.core.async.impl.protocols']);

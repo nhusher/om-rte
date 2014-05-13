@@ -4,3 +4,4 @@ goog.addDependency("asserts/asserts.js", ['goog.asserts', 'goog.asserts.Assertio
 goog.addDependency("array/array.js", ['goog.array', 'goog.array.ArrayLike'], ['goog.asserts']);
 goog.addDependency("object/object.js", ['goog.object'], []);
 goog.addDependency("string/stringbuffer.js", ['goog.string.StringBuffer'], []);
+goog.addDependency("ui/idgenerator.js", ['goog.ui.IdGenerator'], []);

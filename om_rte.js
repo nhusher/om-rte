@@ -15,4 +15,7 @@ goog.addDependency("../cljs/core/async/impl/dispatch.js", ['cljs.core.async.impl
 goog.addDependency("../cljs/core/async/impl/channels.js", ['cljs.core.async.impl.channels'], ['cljs.core.async.impl.buffers', 'cljs.core', 'cljs.core.async.impl.dispatch', 'cljs.core.async.impl.protocols']);
 goog.addDependency("../cljs/core/async/impl/timers.js", ['cljs.core.async.impl.timers'], ['cljs.core', 'cljs.core.async.impl.channels', 'cljs.core.async.impl.dispatch', 'cljs.core.async.impl.protocols']);
 goog.addDependency("../cljs/core/async.js", ['cljs.core.async'], ['cljs.core.async.impl.ioc_helpers', 'cljs.core.async.impl.buffers', 'cljs.core', 'cljs.core.async.impl.channels', 'cljs.core.async.impl.dispatch', 'cljs.core.async.impl.protocols', 'cljs.core.async.impl.timers']);
-goog.addDependency("../om_rte/core.js", ['om_rte.core'], ['hickory.render', 'cljs.core', 'hickory.core', 'om.core', 'om.dom', 'cljs.core.async']);
+goog.addDependency("../om_rte/utils.js", ['om_rte.utils'], ['hickory.render', 'cljs.core', 'hickory.core', 'om.core', 'om.dom', 'cljs.core.async']);
+goog.addDependency("../om_rte/editor.js", ['om_rte.editor'], ['hickory.render', 'cljs.core', 'hickory.core', 'om.core', 'om.dom', 'cljs.core.async']);
+goog.addDependency("../om_rte/controls.js", ['om_rte.controls'], ['hickory.render', 'cljs.core', 'hickory.core', 'om.core', 'om.dom', 'cljs.core.async']);
+goog.addDependency("../om_rte/core.js", ['om_rte.core'], ['hickory.render', 'cljs.core', 'om_rte.controls', 'om_rte.editor', 'hickory.core', 'om.core', 'om_rte.utils', 'om.dom', 'cljs.core.async']);

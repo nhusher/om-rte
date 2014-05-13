@@ -28,5 +28,6 @@
                 :output-to     "om_rte.min.js"
                 :optimizations :advanced
                 :pretty-print  false
+                :source-map    "om_rte.min.map.js"
                 :preamble      ["react/react.min.js"]
                 :externs       ["react/externs/react.js"] }}]})

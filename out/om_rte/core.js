@@ -14,7 +14,6 @@ goog.require('cljs.core.async');
 goog.require('hickory.core');
 cljs.core.enable_console_print_BANG_.call(null);
 om_rte.core.text = "<div><a href='http://www.google.com'>hello</a></div>\n           <div><b>This is in bold</b></div>\n           <div><i>And this is italics.</i></div>";
-om_rte.core.mych = cljs.core.async.chan.call(null);
 om_rte.core.app_state = cljs.core.atom.call(null,new cljs.core.PersistentArrayMap(null, 1, [new cljs.core.Keyword(null,"content","content",1965434859),cljs.core.map.call(null,hickory.core.as_hiccup,hickory.core.parse_fragment.call(null,om_rte.core.text))], null));
 om_rte.core.dom_events = new cljs.core.PersistentVector(null, 12, 5, cljs.core.PersistentVector.EMPTY_NODE, ["cut","paste","click","dblclick","focusin","focusout","keydown","keypress","keyup","mousedown","mouseup","click"], null);
 om_rte.core.make_editor = (function make_editor(css_prefix,events,evt_callback,content){var n = document.createElement("div");var seq__9175_9179 = cljs.core.seq.call(null,events);var chunk__9176_9180 = null;var count__9177_9181 = 0;var i__9178_9182 = 0;while(true){
@@ -476,6 +475,7 @@ rte_ui.cljs$core$IFn$_invoke$arity$3 = rte_ui__3;
 return rte_ui;
 })()
 ;
-om.core.root.call(null,om_rte.core.rte_ui,om_rte.core.app_state,new cljs.core.PersistentArrayMap(null, 2, [new cljs.core.Keyword(null,"target","target",4427965699),document.getElementById("app"),new cljs.core.Keyword(null,"opts","opts",1017322386),new cljs.core.PersistentArrayMap(null, 1, [new cljs.core.Keyword(null,"cmd-ch","cmd-ch",3951879498),om_rte.core.mych], null)], null));
+document.addEventListener("DOMContentLoaded",(function (_){return om.core.root.call(null,om_rte.core.rte_ui,om_rte.core.app_state,new cljs.core.PersistentArrayMap(null, 1, [new cljs.core.Keyword(null,"target","target",4427965699),document.getElementById("app")], null));
+}));
 
 //# sourceMappingURL=core.js.map

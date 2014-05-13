@@ -153,6 +153,7 @@
    (addEventListener "DOMContentLoaded"
                      (fn [_] (om/root rte-ui
                                       app-state
-                                      {:target (. js/document (getElementById "app")) }))))
+                                      {:target (. js/document (getElementById "app"))
+                                       :opts { :cmd-ch (chan) }}))))
 
 

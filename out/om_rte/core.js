@@ -475,7 +475,7 @@ rte_ui.cljs$core$IFn$_invoke$arity$3 = rte_ui__3;
 return rte_ui;
 })()
 ;
-document.addEventListener("DOMContentLoaded",(function (_){return om.core.root.call(null,om_rte.core.rte_ui,om_rte.core.app_state,new cljs.core.PersistentArrayMap(null, 1, [new cljs.core.Keyword(null,"target","target",4427965699),document.getElementById("app")], null));
+document.addEventListener("DOMContentLoaded",(function (_){return om.core.root.call(null,om_rte.core.rte_ui,om_rte.core.app_state,new cljs.core.PersistentArrayMap(null, 2, [new cljs.core.Keyword(null,"target","target",4427965699),document.getElementById("app"),new cljs.core.Keyword(null,"opts","opts",1017322386),new cljs.core.PersistentArrayMap(null, 1, [new cljs.core.Keyword(null,"cmd-ch","cmd-ch",3951879498),cljs.core.async.chan.call(null)], null)], null));
 }));
 
 //# sourceMappingURL=core.js.map

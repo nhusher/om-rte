@@ -13,7 +13,7 @@
                   "keydown"   "keypress" "keyup"
                   "mousedown" "mouseup"  "click" ])
 
-(defn- make-editor [css-prefix content]
+(defn- make-editor [css-prefix sel-ch content]
   (let [n (.createElement js/document "div")]
     (.setAttribute n "class" (str css-prefix "-editor"))
     (.setAttribute n "contentEditable" true)
@@ -38,18 +38,22 @@
     (display-name [_] "rte-editor")
 
     om/IInitState
-    (init-state [_] { })
+    (init-state [_] { :throttle 20
+                      :css-prefix "editor"
+                      :sel-ch (chan (a/dropping-buffer 1))
+                      :cmd-ch (chan) })
 
     om/IDidMount
     (did-mount [_]
-               (let [{:keys [throttle cmd-ch css-prefix]} (om/get-state owner)
+               (let [{:keys [throttle
+                             cmd-ch
+                             sel-ch
+                             css-prefix]} (om/get-state owner)
                      parent (om/get-node owner)
-                     editor (make-editor css-prefix
-                                         (hr/hiccup-to-html (:content data)))]
-
-                 (if (nil? cmd-ch)
-                   (throw (js/Error "Command channel disconnected!")))
-
+                     editor (make-editor
+                             css-prefix
+                             sel-ch
+                             (hr/hiccup-to-html (:content data)))]
                  (a/go
                   (loop []
                     (let [[command arg] (<! cmd-ch)]

@@ -52,7 +52,6 @@
                      parent (om/get-node owner)
                      editor (make-editor
                              css-prefix
-                             sel-ch
                              (hr/hiccup-to-html (:content data)))]
                  (a/go
                   (loop []

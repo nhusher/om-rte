@@ -26,21 +26,54 @@
                    { :icon "fa-quote-left" :label "Quote"     :action #(put! % ["formatblock" "blockquote"]) }
                    { :icon "fa-link"       :label "Link"      :action #(prn %)                               }])
 
+;; I feel like this might be too heavyweight for what we need, but...
+(defprotocol RteControl
+  "A protocol for RTE controls."
+  (get-icon [c])
+  (get-label [c]))
+
+(defprotocol RteComplexControl
+  "A stupid name for a control that might contain a bit of state."
+  (get-component [c]))
+
+(defprotocol RteSimpleControl
+  "Another stupid name for a control, but this one will have no state."
+  (get-action [c]))
+
+;; A minimal-maximal example of the outcome:
+(reify
+  RteControl
+  (get-icon [_] "fa-bold") ;; It seems like these will/should always be constant. Implies a map-like structure instead.
+  (get-label [_] "bold")
+
+  RteComplexControl
+  (get-component [_] rte-link-component) ;; Also probably implies a map-like structure.
+
+  RteSimpleControl
+  (get-action [_ select-state] [:format-block "blockquote"])) ;; Is handed the select-state, so it could switch on behvior here
+
+
+
 (defn rte-controls [data owner]
   (reify
     om/IDisplayName
     (display-name [_] "rte-controls")
 
     om/IInitState
-    (init-state [_] { :controls def-controls })
+    (init-state [_] { :controls def-controls
+                      :shown-control nil })
 
     om/IRenderState
-    (render-state [_ {:keys [css-prefix cmd-ch controls]}]
-            (apply dom/div #js { :className (str css-prefix "-controls") }
-                   (map (fn [{:keys [icon label action]}]
-                          (dom/button #js { :className "pure-button"
-                                            :title label
-                                            :onClick (fn [_] (action cmd-ch)) }
-                                      (dom/i #js { :className (str "fa " icon) })))
+    (render-state [_ {:keys [css-prefix cmd-ch controls shown-control]}]
+                  (dom/div #js { :className (str css-prefix "-controls-container")}
+                           (if-not (nil? shown-control)
+                             (str "SHOW CONTROL " shown-control))
 
-                        controls)))))
+                           (apply dom/div #js { :className (str css-prefix "-controls") }
+                                  (map (fn [{:keys [icon label action]}]
+                                         (dom/button #js { :className "pure-button"
+                                                           :title label
+                                                           :onClick (fn [_] (action cmd-ch)) }
+                                                     (dom/i #js { :className (str "fa " icon) })))
+
+                                       controls))))))

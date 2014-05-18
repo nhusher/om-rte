@@ -26,6 +26,11 @@
                    { :icon "fa-quote-left" :label "Quote"     :action #(put! % ["formatblock" "blockquote"]) }
                    { :icon "fa-link"       :label "Link"      :action #(prn %)                               }])
 
+;; Necessary?
+(defprotocol Selection
+  (start [s])
+  (end   [s]))
+
 ;; I feel like this might be too heavyweight for what we need, but...
 (defprotocol RteControl
   "A protocol for RTE controls."
@@ -47,7 +52,7 @@
   (get-label [_] "bold")
 
   RteComplexControl
-  (get-component [_] rte-link-component) ;; Also probably implies a map-like structure.
+  (get-component [_ select-state] rte-link-component)
 
   RteSimpleControl
   (get-action [_ select-state] [:format-block "blockquote"])) ;; Is handed the select-state, so it could switch on behvior here
